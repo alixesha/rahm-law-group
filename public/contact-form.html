@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Contact Form Detection</title>
+</head>
+<body>
+  <form
+    name="contact"
+    method="POST"
+    data-netlify="true"
+    netlify-honeypot="bot-field"
+  >
+    <input type="hidden" name="form-name" value="contact" />
+
+    <input type="text" name="fullName" />
+    <input type="email" name="email" />
+    <input type="tel" name="phone" />
+    <input type="text" name="legalMatter" />
+    <textarea name="message"></textarea>
+
+    <input name="bot-field" />
+  </form>
+</body>
+</html>
