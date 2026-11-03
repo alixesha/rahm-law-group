@@ -30,25 +30,28 @@ function ContactPage() {
     setStatus("sending");
 
     const formData = new FormData(form);
-    formData.set("form-name", "contact");
 
-    const body = new URLSearchParams();
-
-    formData.forEach((value, key) => {
-      body.append(key, String(value));
-    });
+    const payload = {
+      fullName: String(formData.get("fullName") || ""),
+      email: String(formData.get("email") || ""),
+      phone: String(formData.get("phone") || ""),
+      legalMatter: String(formData.get("legalMatter") || ""),
+      message: String(formData.get("message") || ""),
+    };
 
     try {
-      const response = await fetch("/contact-form.html", {
+      const response = await fetch("/.netlify/functions/contact", {
         method: "POST",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Type": "application/json",
         },
-        body: body.toString(),
+        body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        throw new Error(`Submission failed: ${response.status}`);
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || "Submission failed");
       }
 
       form.reset();
@@ -221,28 +224,9 @@ function ContactPage() {
             ) : (
               <form
                 name="contact"
-                method="POST"
-                action="/contact-form.html"
-                data-netlify="true"
-                netlify-honeypot="bot-field"
                 onSubmit={handleSubmit}
                 className="mt-8 space-y-5"
               >
-                <input
-                  type="hidden"
-                  name="form-name"
-                  value="contact"
-                />
-
-                <div className="hidden">
-                  <label>
-                    Do not fill this out:
-                    <input
-                      name="bot-field"
-                      tabIndex={-1}
-                    />
-                  </label>
-                </div>
 
                 {/* Full Name */}
                 <div>
@@ -332,42 +316,18 @@ function ContactPage() {
                       Select a legal matter
                     </option>
 
-                    <option value="Personal Injury">
-                      Personal Injury
-                    </option>
-                    <option value="Car Accident">
-                      Car Accident
-                    </option>
-                    <option value="Dog Bite">
-                      Dog Bite
-                    </option>
-                    <option value="Brain Injury">
-                      Brain Injury
-                    </option>
-                    <option value="Construction Accident">
-                      Construction Accident
-                    </option>
-                    <option value="Premises Liability">
-                      Premises Liability
-                    </option>
-                    <option value="Truck Accident">
-                      Truck Accident
-                    </option>
-                    <option value="Wrongful Death">
-                      Wrongful Death
-                    </option>
-                    <option value="Criminal Law">
-                      Criminal Law
-                    </option>
-                    <option value="DUI / DWI">
-                      DUI / DWI
-                    </option>
-                    <option value="Employment Law">
-                      Employment Law
-                    </option>
-                    <option value="Other">
-                      Other
-                    </option>
+                    <option value="Personal Injury">Personal Injury</option>
+                    <option value="Car Accident">Car Accident</option>
+                    <option value="Dog Bite">Dog Bite</option>
+                    <option value="Brain Injury">Brain Injury</option>
+                    <option value="Construction Accident">Construction Accident</option>
+                    <option value="Premises Liability">Premises Liability</option>
+                    <option value="Truck Accident">Truck Accident</option>
+                    <option value="Wrongful Death">Wrongful Death</option>
+                    <option value="Criminal Law">Criminal Law</option>
+                    <option value="DUI / DWI">DUI / DWI</option>
+                    <option value="Employment Law">Employment Law</option>
+                    <option value="Other">Other</option>
                   </select>
                 </div>
 
